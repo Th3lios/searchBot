@@ -10,6 +10,7 @@ query = input("consulta en google: ")
 key = input("Ingresa palabra clave: ")
 key2 = input("Ingresa palabra clave: ")
 key3 = input("Ingresa palabra clave: ")
+key4 = input("Ingresa palabra clave: ")
 
 i=0
 print(query)
