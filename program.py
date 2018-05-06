@@ -2,6 +2,8 @@ import cv2
 import numpy as np
 import glob
 import os
+from pprint import pprint
+import json
 import datetime
 import pytesseract
 import re
@@ -13,48 +15,27 @@ from pytesseract import image_to_string
 
 src_path = r"/Users/macbook/Desktop"
 
+def ocr_space_file(filename, overlay=False, api_key='af599d01d888957', language='eng'):
+    payload = {'isOverlayRequired': overlay,
+               'apikey': api_key,
+               'language': language,
+               }
+    with open(filename, 'rb') as f:
+        r = requests.post('https://api.ocr.space/parse/image',
+                          files={filename: f},
+                          data=payload,
+                          )
+    return r.content.decode()
 
-def get_string(img_path):
-
-    # Si no hay imagen en el desktop, termina el loop
-    if(img_path == "/Users/macbook/Desktop/Elias"):
-        print("No hay imagen disponible")
-        exit(1)
-
-    # Read image with opencv
-    img = cv2.imread(img_path)
-
-    # Convert to gray
-    img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-
-    # Apply dilation and erosion to remove some noise
-    kernel = np.ones((1, 1), np.uint8)
-    img = cv2.dilate(img, kernel, iterations=1)
-    img = cv2.erode(img, kernel, iterations=1)
-
-    # Write image after removed noise
-    cv2.imwrite(src_path + r"/removed_noise.png", img)
-
-    #  Apply threshold to get image with only black and white
-    img = cv2.adaptiveThreshold(img, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY, 31, 2)
-
-    # Write the image after apply opencv to do some ...
-    cv2.imwrite(src_path + r"/thres.png", img)
-
-    # Recognize text with tesseract for python
-    a = Image.open(src_path + r"/thres.png")
-    result = image_to_string(a, lang='eng')
-    #   list_of_word = re.findall(r'\w+', result)
-
-    #print(result)
-    string2 = []
-    for i in result.split("\n\n"):
-        string2.append(i.replace('\n', ' '))
-
-    return string2
 
 
 def search():
+
+    # Variables
+    strApi = []
+    queryStr = []
+    flag = False
+
     # Contadores de palabras claves
     cont = 0
     cont2 = 0
@@ -63,23 +44,50 @@ def search():
     # Devuelve una lista de path's del desktop
     list_of_files = glob.glob('/Users/macbook/Desktop/*')
 
-    # Devuelve el path del ultimo archivo del desktop
+    # Devuelve el path del último archivo del desktop
     latest_file = max(list_of_files, key=os.path.getctime)
 
+    # Devuelve un string con el texto de la imagen
+    dict_file = ocr_space_file(filename=latest_file, language='eng')
+
+    # Devuelve un diccionario con el contenido de la imagen
+    data = json.loads(dict_file)
+
+    # Retorna el contenido exacto requerido como un array
+    filter = (data['ParsedResults'][0]['ParsedText']).split(' ')
+
+    # Loop utilizado para filtrar palabras clave
+    for i in filter:
+        # Si el flag sea False, almecenará cada string en queryStr
+        if(not flag):
+            queryStr.append(i.replace('\r\n', ''))
+        # Si se llega al signo de interrogación, se salta el loop
+        if ('?' in i):
+            flag = True
+            continue
+        # Si ya se paso el signo de interrogación, empieza a guardar en strApi
+        if (flag):
+            # Condición para no guardar el último espacio vacío
+            if (i == '\r\n'):
+                break
+            strApi.append(i.replace('\r\n', ''))
+
     # Obtiene el texto de la imagen
-    string = get_string(latest_file)
-    print(string)
+    #string = get_string(latest_file)
+    #print(string[0])
+    qString = " ".join(queryStr)
 
     # Pregunta
-    query = string[0]
+    query = qString
+    print(query)
 
     # Si el array string no llega a tener 4 valores, arroja una excepcion
     try:
 
         # Respuestas
-        key = string[1]
-        key2 = string[2]
-        key3 = string[3]
+        key = strApi[0]
+        key2 = strApi[1]
+        key3 = strApi[2]
     except IndexError:
         print("No se cargaron las palabras clave")
         exit(1)
@@ -125,7 +133,9 @@ def search():
     print(str(cont2 / contf * 100) + "% - " + key2)
     print(str(cont3 / contf * 100) + "% - " + key3)
 
-
 print('--- Start recognize text from image ---')
 search()
 print("------ Done -------")
+
+
+
