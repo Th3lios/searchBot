@@ -6,6 +6,7 @@ import requests
 
 src_path = r"/Users/macbook/Desktop"
 
+
 def ocr_space_file(filename, overlay=False, api_key='af599d01d888957', language='eng'):
     payload = {'isOverlayRequired': overlay,
                'apikey': api_key,
@@ -18,12 +19,14 @@ def ocr_space_file(filename, overlay=False, api_key='af599d01d888957', language=
                           )
     return r.content.decode()
 
+
 def search():
 
     # Variables
-    strApi = []
-    queryStr = []
+    str_api = []
+    query_str = []
     flag = False
+    cont_aux = 0
 
     # Contadores de palabras claves
     cont = 0
@@ -47,48 +50,56 @@ def search():
 
     # Loop utilizado para filtrar palabras clave
     for i in filter:
-        # Si el flag sea False, almecenará cada string en queryStr
-        if(not flag):
-            queryStr.append(i.replace('\r\n', ''))
+
+        # Si el flag sea False, almecenará cada string en query_str
+        if not flag:
+            query_str.append(i.replace('\r\n', ''))
+
         # Si se llega al signo de interrogación, se salta el loop
-        if ('?' in i):
+        if '?' in i:
             flag = True
             continue
-        # Si ya se paso el signo de interrogación, empieza a guardar en strApi
-        if (flag):
-            # Condición para no guardar el último espacio vacío
-            if (i == '\r\n'):
-                break
-            strApi.append(i.replace('\r\n', ''))
 
-    # Obtiene el texto de la imagen
-    #string = get_string(latest_file)
-    #print(string[0])
-    qString = " ".join(queryStr)
+        # Si ya se paso el signo de interrogación, empieza a guardar en str_api
+        if flag:
+
+            # Si encuentra que un elemento de la lista es igual a \r\n se sale del loop
+            if i == '\r\n':
+                break
+
+            # Si encuentra un \r\n en algún elemento de la lista lo reemplaza y lo añade
+            if '\r\n' in i:
+                str_api.append(i.replace('\r\n', ' '))
+            # En caso contrario contatena el elemento actual con el anterior
+            else:
+                str_api[cont_aux - 1] += " " + i
+            cont += 1
+
+    # Une q_string en una sola linea
+    q_string = " ".join(query_str)
 
     # Pregunta
-    query = qString
+    query = q_string
     print(query)
 
     # Si el array string no llega a tener 4 valores, arroja una excepcion
     try:
 
-        # Respuestas
-        key = strApi[0]
-        key2 = strApi[1]
-        key3 = strApi[2]
+        # Respuestas sin contar el primer caracter
+        key = str_api[0][1:]
+        key2 = str_api[1][1:]
+        key3 = str_api[2][1:]
     except IndexError:
         print("No se cargaron las palabras clave")
         exit(1)
 
-
     search = query.replace(" ", "+")
 
     # Se carga el enlace con la pregunta y palabras claves
-    googleSearch = "https://www.google.cl/search?q="+search+" "+key+" "+key2+" "+key3
+    google_search = "https://www.google.cl/search?q=" + search + " " + key + " " + key2 + " " + key3
 
     # Se realiza el request al enlace, retorna informacion de la pagina
-    r = requests.get(googleSearch)
+    r = requests.get(google_search)
 
     # Devuelve el texto de la pagina con tag's
     soup = BeautifulSoup(r.text, "html.parser")
@@ -103,11 +114,11 @@ def search():
         value = i.get_text()
 
         # Se contabilizan concurrencias de palabras claves en una linea
-        if (key in value):
+        if key in value:
             cont += 1
-        if (key2 in value):
+        if key2 in value:
             cont2 += 1
-        if (key3 in value):
+        if key3 in value:
             cont3 += 1
 
     # Suma total de ocurrencias
@@ -122,9 +133,7 @@ def search():
     print(str(cont2 / contf * 100) + "% - " + key2)
     print(str(cont3 / contf * 100) + "% - " + key3)
 
+
 print('--- Start recognize text from image ---')
 search()
 print("------ Done -------")
-
-
-
