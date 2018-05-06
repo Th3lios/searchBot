@@ -1,17 +1,8 @@
-import cv2
-import numpy as np
 import glob
 import os
-from pprint import pprint
 import json
-import datetime
-import pytesseract
-import re
 from bs4 import BeautifulSoup
-from collections import Counter
 import requests
-from PIL import Image
-from pytesseract import image_to_string
 
 src_path = r"/Users/macbook/Desktop"
 
@@ -26,8 +17,6 @@ def ocr_space_file(filename, overlay=False, api_key='af599d01d888957', language=
                           data=payload,
                           )
     return r.content.decode()
-
-
 
 def search():
 
