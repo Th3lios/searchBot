@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="24d7a951-5d4b-4b31-80fe-d33f25bd2ba4" name="Default" comment="" />
+    <list default="true" id="24d7a951-5d4b-4b31-80fe-d33f25bd2ba4" name="Default" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -20,11 +22,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="program.py" pinned="false" current-in-tab="false">
+      <file leaf-file-name="program.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/program.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-1214">
-              <caret line="49" selection-start-line="49" selection-end-line="49" />
+            <state relative-caret-position="226">
+              <caret line="145" column="21" lean-forward="true" selection-start-line="145" selection-start-column="21" selection-end-line="145" selection-end-column="21" />
               <folding>
                 <element signature="e#0#10#0" expanded="true" />
               </folding>
@@ -32,7 +34,7 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="trash.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="trash.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/trash.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="120">
@@ -258,6 +260,7 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1366" height="768" extended-state="6" />
+    <editor active="true" />
     <layout>
       <window_info anchor="bottom" id="TODO" order="6" />
       <window_info anchor="bottom" id="Event Log" order="7" side_tool="true" />
@@ -580,16 +583,6 @@
       </provider>
     </entry>
     <entry file="file://$USER_HOME$/Desktop/Elias/Python Programación/Python/pythonCode/codigo2.py" />
-    <entry file="file://$PROJECT_DIR$/program.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1214">
-          <caret line="49" selection-start-line="49" selection-end-line="49" />
-          <folding>
-            <element signature="e#0#10#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/beautifulSoup.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="105">
@@ -618,6 +611,16 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="120">
           <caret line="8" column="30" selection-start-line="8" selection-start-column="30" selection-end-line="8" selection-end-column="30" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/program.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="226">
+          <caret line="145" column="21" lean-forward="true" selection-start-line="145" selection-start-column="21" selection-end-line="145" selection-end-column="21" />
+          <folding>
+            <element signature="e#0#10#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
