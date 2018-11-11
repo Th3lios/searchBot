@@ -6,34 +6,6 @@ import json
 import numpy as np
 from bs4 import BeautifulSoup
 import requests
-src_path = "/Users/macbook/Desktop"
-def get_string(img_path):
-
-    # Si no hay imagen en el desktop, termina el loop
-    if(img_path == "/Users/macbook/Desktop/Elias"):
-        print("No hay imagen disponible")
-        exit(1)
-
-    # Read image with opencv
-    img = cv2.imread(img_path)
-
-    # Convert to gray
-    img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-
-    # Apply dilation and erosion to remove some noise
-    kernel = np.ones((1, 1), np.uint8)
-    img = cv2.dilate(img, kernel, iterations=1)
-    img = cv2.erode(img, kernel, iterations=1)
-
-    # Write image after removed noise
-    cv2.imwrite(src_path + r"/removed_noise.png", img)
-
-    #  Apply threshold to get image with only black and white
-    #img = cv2.adaptiveThreshold(img, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY, 31, 2)
-
-    # Write the image after apply opencv to do some ...
-    #cv2.imwrite(src_path + r"/thres.png", img)
-
 
 def ocr_space_file(filename, overlay=False, api_key='af599d01d888957', language='eng'):
     payload = {'isOverlayRequired': overlay,
@@ -65,11 +37,6 @@ def search():
     list_of_files = glob.glob('/Users/macbook/Desktop/*')
 
     # Devuelve el path del último archivo del desktop
-    latest_file = max(list_of_files, key=os.path.getctime)
-    get_string(str(latest_file))
-
-    # Se consulta por la última imagen en blanco y negro
-    list_of_files = glob.glob('/Users/macbook/Desktop/*')
     latest_file = max(list_of_files, key=os.path.getctime)
 
     # Devuelve un string con el texto de la imagen
@@ -126,10 +93,30 @@ def search():
         print("No se cargaron las palabras clave")
         exit(1)
 
+    bool = False
+    #search = query
+    wlist = ["which","these"]
     search = query.replace(" ", "+")
+    for i in wlist:
+        if i in search.lower():
+            bool = True
+            break
 
-    # Se carga el enlace con la pregunta y palabras claves
-    google_search = 'https://www.google.cl/search?q=' + search +" "+key+" "+key2+" "+key3
+
+    # Eliminar palabras de la pregunta para mejor resultados
+    # del_word = ['is','are','in','?', "of"]
+    # for i in del_word:
+    #    search = search.replace(i, "")
+
+    # print(search)
+
+
+    if(bool):
+        google_search = 'https://www.google.cl/search?q=' + search + " " + key + " " + key2 + " " + key3
+    else:
+        google_search = 'https://www.google.cl/search?q=' + search
+
+
 
     # Se realiza el request al enlace, retorna informacion de la pagina
     r = requests.get(google_search)
@@ -138,14 +125,22 @@ def search():
     soup = BeautifulSoup(r.text, "html.parser")
 
     # Se buscan todos los contenidos de la pagina que estan entre <span "class"="st"><span>
-    url = soup.findAll('span', {"class": "st"})
+    #url = soup.findAll('span', {"class": "st"})
 
+    for i in soup.findAll('h3',{"class":"r"}):
+        value = i.get_text()
+        if key.lower() in value.lower():
+            cont += 1
+        if key2.lower() in value.lower():
+            cont2 += 1
+        if key3.lower() in value.lower():
+            cont3 += 1
     # Se analiza linea por linea el string url
-    for i in url:
+    for i in soup.findAll('span', {"class": "st"}):
 
         # Entrega una linea obviando los tag's intermedios
         value = i.get_text()
-        print (value)
+        #print (value)
         # Se contabilizan concurrencias de palabras claves en una linea
         if key.lower() in value.lower():
             cont += 1
