@@ -3,8 +3,8 @@ SearchBot to solve Trivias made in python
 
 # Tools
 
-..*WebScraping with Beautifulsoup. 
-..*OCR by ORC Space API https://ocr.space/. 
+* WebScraping with Beautifulsoup. 
+* OCR by ORC Space API https://ocr.space/. 
 
 # Objectives
 
