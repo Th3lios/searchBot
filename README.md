@@ -8,6 +8,6 @@ SearchBot to solve Trivias made in python
 
 # Objectives
 
-* We develope a bot that analize an image with 3 alternatives that answer trivia questions. 
+* We developed a bot that analize an image with 3 alternatives that answer trivia questions. 
 * Now just take 3 alternatives and count the ocurrences when we search the question on google.
 * We are thinking to implement Natural Lenguage Processing in the future.
